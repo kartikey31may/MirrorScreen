@@ -22,7 +22,8 @@ def allowed_file(filename):
    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 def gen(path=app.config['UPLOAD_FOLDER_LIVE']):
-    cap = cv2.VideoCapture(path)
+	path += "//" + os.listdir(path)[0]
+	cap = cv2.VideoCapture(path)
 
     while True:
         ret ,frame = cap.read()

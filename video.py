@@ -36,12 +36,21 @@ class CreateVideo():
     def __init__(self, path):
         self.file_path = path
         self.height, self.width, self.layers = np.array(ImageGrab.grab()).shape
+        self.count = 0
+        self.flag = 0
 
     def run(self):
-        out = cv2.VideoWriter(self.file_path, cv2.VideoWriter_fourcc(*'XVID'), 24, (self.width, self.height))
         while True:
-            img = np.array(ImageGrab.grab())
-            out.write(img)
-            if cv2.waitKey(0) == ord('q'):
-                break
-        cv2.destroyAllWindows()
+            self.count = 0
+            self.flag += 1
+            out = cv2.VideoWriter(self.file_path, cv2.VideoWriter_fourcc(*'XVID'), 24, (self.width, self.height))
+
+            while True:
+                img = np.array(ImageGrab.grab())
+                out.write(img)
+                self.count += 1
+                if cv2.waitKey(0) == ord('q'):
+                    break
+                if self.count == 120:
+                    break
+            pass

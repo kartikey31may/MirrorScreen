@@ -3,7 +3,7 @@ import numpy as np
 from PIL import ImageGrab
 
 
-class Video():
+class Video:
 
     def __init__(self, name, path, fps=30):
         self.file_name = path
@@ -30,7 +30,7 @@ class Video():
         cv2.destroyAllWindows()
 
 
-class CreateVideo():
+class CreateVideo:
     frames_per_second = 24
 
     def __init__(self, path):

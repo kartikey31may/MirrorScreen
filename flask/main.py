@@ -1,6 +1,7 @@
 import os
-from flask import Flask, request, redirect, url_for, render_template, send_from_directory
+from flask import Flask, request, redirect, url_for, render_template, send_from_directory, Response
 from werkzeug.utils import secure_filename
+import requests
 import cv2
 
 UPLOAD_FOLDER = os.path.dirname(os.path.abspath(__file__)) + '/uploads/'
@@ -22,13 +23,22 @@ def allowed_file(filename):
    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 def gen(path=app.config['UPLOAD_FOLDER_LIVE']):
-	path += "//" + os.listdir(path)[0]
+	path +=  os.listdir(path)[0]
 	cap = cv2.VideoCapture(path)
+	count = 0
+	while True:
+		ret ,frame = cap.read()
+		if not ret:
+			break
 
-    while True:
-        ret ,frame = cap.read()
-        yield (b'--frame\r\n'
-               b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
+		print("Frame Size: " + str(len(frame)))
+
+		yield (b'--frame\r\n'
+			b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
+
+@app.route('/test')
+def test():
+   return render_template('live.html')
 
 @app.route('/video_feed')
 def video_feed():
@@ -58,25 +68,7 @@ def index():
 
    return render_template('index.html')
 
-@app.route('/live', methods=['GET', 'POST'])
-def index():
-   if request.method == 'POST':
-       if 'file' not in request.files:
-           print('No file attached in request')
-           return redirect(request.url)
-       file = request.files['file']
 
-       if file.filename == '':
-           print('No file selected')
-           return redirect(request.url)
-
-       if file and allowed_file(file.filename):
-           filename = secure_filename(file.filename)
-           file.save(os.path.join(app.config['UPLOAD_FOLDER_LIVE'], filename))
-           return redirect(url_for('uploaded_file', filename=filename))
-
-   return render_template('index.html')
 
 if __name__ == '__main__':
-    port = int(os.environ.get("PORT", 5000))
-    app.run(host='0.0.0.0', port=port, debug=True)
+    app.run(debug=True)

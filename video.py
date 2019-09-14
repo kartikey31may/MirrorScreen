@@ -1,6 +1,4 @@
 import cv2
-import numpy as np
-from PIL import ImageGrab
 
 
 class Video:
@@ -11,13 +9,14 @@ class Video:
         self.interframe_wait_ms = fps
 
     def run(self):
-        print(self.file_name)
+        #print(self.file_name)
         cap = cv2.VideoCapture(self.file_name)
         if not cap.isOpened():
             exit()
         cv2.namedWindow(self.window_name, cv2.WND_PROP_FULLSCREEN)
         cv2.setWindowProperty(self.window_name, cv2.WND_PROP_FULLSCREEN, cv2.WINDOW_FULLSCREEN)
-        while True:
+
+        for i in range(int(cap.get(cv2.CAP_PROP_FRAME_COUNT))):
             ret, frame = cap.read()
             if ret:
                 cv2.imshow(self.window_name, frame)
@@ -28,29 +27,3 @@ class Video:
                 break
         cap.release()
         cv2.destroyAllWindows()
-
-
-class CreateVideo:
-    frames_per_second = 24
-
-    def __init__(self, path):
-        self.file_path = path
-        self.height, self.width, self.layers = np.array(ImageGrab.grab()).shape
-        self.count = 0
-        self.flag = 0
-
-    def run(self):
-        while True:
-            self.count = 0
-            self.flag += 1
-            out = cv2.VideoWriter(self.file_path, cv2.VideoWriter_fourcc(*'XVID'), 24, (self.width, self.height))
-
-            while True:
-                img = np.array(ImageGrab.grab())
-                out.write(img)
-                self.count += 1
-                if cv2.waitKey(0) == ord('q'):
-                    break
-                if self.count == 120:
-                    break
-            pass

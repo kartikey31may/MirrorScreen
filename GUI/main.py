@@ -6,6 +6,7 @@
 #    Sep 07, 2019 09:16:45 PM IST  platform: Windows NT
 
 import sys
+import requests
 
 try:
     import Tkinter as tk
@@ -20,6 +21,9 @@ except ImportError:
     py3 = True
 
 import main_support
+
+#def run_server():
+
 
 def vp_start_gui():
     '''Starting point when module is the main routine.'''

@@ -20,6 +20,7 @@ def sync():
 	for i in video:
 		if i not in data:
 			re = requests.get(url+"/"+i, allow_redirects=True)
+			
 			with open(os.getcwd()+"//uploads//"+i, 'wb') as f: 
 				f.write(re.content)
 				print(i)

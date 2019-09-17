@@ -221,20 +221,12 @@ class Toplevel1:
 
         data = returnUploads()
 
-        total = len(video) - len(data)
-        count = 1
-
         for i in video:
             if i not in data:
-                msg = 'Downloading : %d out of %d' % (count, total)
-                self.update(msg)
                 re = requests.get(self.url + "/" + i, allow_redirects=True)
                 with open(os.getcwd() + "//uploads//" + i, 'wb') as f:
                     f.write(re.content)
                     print(i)
-                count += 1
-        msg = ''
-        self.update(msg)
         self.populate()
 
     def play_selected(self):

@@ -38,3 +38,4 @@ if __name__ == '__main__':
     picture = json['picture']
     print(video, picture)
     sync()
+    print("working jugad")
